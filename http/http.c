@@ -753,7 +753,7 @@ short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
     if (fpid == 0) {
         HttpResponse* response = HttpSend(request);
         callback(response);
-        free(response);
+        FreeHttpResponse(response);
     }
 
     return 0;
