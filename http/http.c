@@ -743,7 +743,38 @@ void SetTimeout(HttpRequest* request, const unsigned int s)
     request->timeout = s;
 }
 
+short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
+{
+    pid_t fpid = fork();
+    if (fpid < 0) {
+        return -1;
+    }
+
+    if (fpid == 0) {
+        HttpResponse* response = HttpSend(request);
+        callback(response);
+        free(response);
+    }
+
+    return 0;
+}
+
 // demo.c
+// void Callback(HttpResponse* response)
+// {
+//     //   Print Async Recv
+//     {
+//         printf("\nAsync Response\n");
+//         printf("=====================================\n");
+//         printf("Version: %s\n", response->version);
+//         printf("Status: %d\n", response->status);
+//         printf("Message: %s\n", response->message);
+//         printf("Content:\n");
+//         printf("%s\n", response->content);
+//         printf("=====================================\n");
+//     }
+// }
+
 // int main(void) {
 //     //  test
 //     char str[10240];
@@ -819,6 +850,8 @@ void SetTimeout(HttpRequest* request, const unsigned int s)
 //         printf("%s\n", response->content);
 //         printf("=====================================\n");
 //     }
+
+//     AsyncHttpSend(request, Callback);
 
 //     FreeHttpResponse(response);
 //     DeleteHttpRequest(request);
