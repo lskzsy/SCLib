@@ -754,6 +754,7 @@ short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
         HttpResponse* response = HttpSend(request);
         callback(response);
         FreeHttpResponse(response);
+        exit(0);
     }
 
     return 0;
