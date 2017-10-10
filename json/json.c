@@ -145,7 +145,6 @@ JsonObject* NewJsonDecimal(const double decimal)
     return object;
 }
 
-
 int JsonDictSet(JsonObject* object, const char* key, const JsonObject* value)
 {
     if (object->type != JSON_TYPE_DICT) {
@@ -599,7 +598,7 @@ JsonObject* JsonDecoder(const char* strJson, const unsigned int length)
     //     printf("%d ", symbolMap[i]);
     // }
     // printf("\n");
-
+    
     switch (strJson[0]) {
         case '{':
             object = DecodeDict(strJson, symbolMap, 1, length - 2);
@@ -607,8 +606,6 @@ JsonObject* JsonDecoder(const char* strJson, const unsigned int length)
         case '[':
             object = DecodeArray(strJson, symbolMap, 1, length - 2);
             break;
-        default:
-            return NULL;
     }
 
     free(symbolMap);
