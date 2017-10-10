@@ -24,10 +24,38 @@
 #define USER_AGENT              "SClib HttpTool/1.0 (compatible; Any OS)"
 
 typedef struct {
+    char*           name;
+    
+    char*           value;
+    
+    char*           expires;
+    
+    char*           path;
+    
+    char*           domain;
+    
+    unsigned short  secure;
+} CookieNode;
+
+typedef struct CookieType {
+    char                chr;
+    
+    CookieNode*         v;
+    
+    struct CookieType*  child;
+
+    struct CookieType*  brother;
+} Cookie;
+
+typedef struct {
     char*           protocal;
+    
     char*           host;
+    
     char*           address;
+    
     unsigned short  port;    
+    
     char*           uri;
 } Url;
 
@@ -99,7 +127,7 @@ void                DestoryHttpPostData(HttpPostData*);
 
 char*               GetHttpHeader(const HttpHeader*, const char*);
 
-void                SetTimeout(HttpRequest*, const unsigned int);
+void                SetHttpTimeout(HttpRequest*, const unsigned int);
 
 long long           StringToLong(const char*);
 

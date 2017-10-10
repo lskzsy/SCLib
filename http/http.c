@@ -214,6 +214,7 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
                 case 1:
                     //  Get Http Status
                     strncpy(strStatus, buffer + prev, size);
+                    strStatus[size] = 0;
                     response->status = (unsigned short)StringToLong(strStatus);
                     break;
                 case 2:
@@ -738,7 +739,7 @@ void DestoryHttpPostData(HttpPostData* data)
     DestoryHeader((HttpHeader*)data);
 }
 
-void SetTimeout(HttpRequest* request, const unsigned int s)
+void SetHttpTimeout(HttpRequest* request, const unsigned int s)
 {
     request->timeout = s;
 }
@@ -788,7 +789,11 @@ short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
 //     HttpRequest* request;
 //     if (method == 0) {
 //         request = NewHttpRequest(str, HTTP_GET, NULL);
-//         SetTimeout(request, 3);
+//         if (request == NULL) {
+//             printf("Http error!\n");
+//             return 0;
+//         }
+//         SetHttpTimeout(request, 3);
 //     } else {
 //         HttpPostData* data = CreateHttpPostData();
 //         SetHttpPostData(data, "country", "SE");
@@ -798,7 +803,11 @@ short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
 //         SetHttpPostData(data, "port", "");
 
 //         request = NewHttpRequest(str, HTTP_POST, data);
-//         SetTimeout(request, 3);
+//         if (request == NULL) {
+//             printf("Http error!\n");
+//             return 0;
+//         }
+//         SetHttpTimeout(request, 3);
 //         SetHttpHeader(request->header, "Cookie", "JSESSIONID=66E7C827DC215EA19F0CAB4E1905D9F5; JSESSIONID=8E0A5625B0576899A4D6DF9E2B567DF9");
 //         DestoryHttpPostData(data);
 //     }
@@ -848,11 +857,11 @@ short AsyncHttpSend(const HttpRequest* request, const HttpCallback callback)
 //         printf("Status: %d\n", response->status);
 //         printf("Message: %s\n", response->message);
 //         printf("Content:\n");
-//         printf("%s\n", response->content);
+//         // printf("%s\n", response->content);
 //         printf("=====================================\n");
 //     }
 
-//     AsyncHttpSend(request, Callback);
+//     // AsyncHttpSend(request, Callback);
 
 //     FreeHttpResponse(response);
 //     DeleteHttpRequest(request);
