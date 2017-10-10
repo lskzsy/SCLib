@@ -102,6 +102,8 @@ typedef struct {
     char*          data;
 
     unsigned int   timeout;
+
+    Cookie*        cookie;
 } HttpRequest;
 
 typedef void (*HttpCallback) (HttpResponse*);
@@ -111,7 +113,7 @@ HttpResponse*       HttpSend(const HttpRequest*);
 
 short               AsyncHttpSend(const HttpRequest*, const HttpCallback);
 
-HttpRequest*        NewHttpRequest(const char*, const char*, const HttpPostData*);
+HttpRequest*        NewHttpRequest(const char*, const char*, const HttpPostData*, Cookie*);
 
 void                DeleteHttpRequest(HttpRequest*);
 
@@ -134,5 +136,17 @@ long long           StringToLong(const char*);
 void                LongToString(const long long, char*, int);
 
 int                 URLEncode(const char*, const int, char*, const int);
+
+Cookie*             NewHttpCookie();
+
+CookieNode*         NewHttpCookieNode(const char*, const char*, const char*, const char*, const char*);
+
+void                SetHttpCookie(Cookie*, const char*, const CookieNode*);
+
+void                GetHttpCookie(Cookie*, const char*, CookieNode*);
+
+void                DeleteHttpCookie(Cookie*);
+
+void                DeleteHttpCookieNode(CookieNode*);
 
 #endif

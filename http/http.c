@@ -199,7 +199,7 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
 
     char* key      = (char*) calloc(512, sizeof(char));
     char* value    = (char*) calloc(512, sizeof(char));
-    char  strStatus[3];
+    char  strStatus[4];
     // printf("%s\n", buffer);
     while (i < bufferLength) {
         if (buffer[i] == '\r' || buffer[i] == ' ') {
@@ -214,7 +214,7 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
                 case 1:
                     //  Get Http Status
                     strncpy(strStatus, buffer + prev, size);
-                    strStatus[size] = 0;
+                    strStatus[size] = '\0';
                     response->status = (unsigned short)StringToLong(strStatus);
                     break;
                 case 2:
@@ -235,9 +235,7 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
                     // printf("%d\n", size);
                     strncpy(key, buffer + prev, size);
                     key[size] = '\0';
-
                     size = i - split - 2;
-                    // printf("%d\n", size);
                     strncpy(value, buffer + split + 2, size);
                     value[size] = '\0';
                     // printf("%s %s\n", key, value);
@@ -267,7 +265,6 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
 
         i++;
     }
-
     //  Save Content
     size = bufferLength - i;
     response->content = (char*) calloc(size + 1, sizeof(char));
@@ -277,6 +274,7 @@ unsigned int GetResponseHead(const char* buffer, int bufferLength, HttpResponse*
 
     free(key);
     free(value);
+
     return i;
 }
 
@@ -509,7 +507,7 @@ HttpResponse* HttpSend(const HttpRequest* request)
     } else {
         contentLength = StringToLong(strContentLength);
     }
-    
+
     // printf("%d %d %d\n", result, headLength, contentLength);
     if (result - headLength < contentLength) {
         //printf("111\n");
@@ -579,14 +577,14 @@ void LongToString(const long long num, char* string, int len)
     string[i] = '\0';
 }
 
-HttpRequest* NewHttpRequest(const char* url, const char* method, const HttpPostData* data)
+HttpRequest* NewHttpRequest(const char* url, const char* method, const HttpPostData* data, Cookie* cookie)
 {
     HttpRequest*    request;
     int             size;
 
     request = (HttpRequest*) calloc(1, sizeof(HttpRequest));
     request->data = NULL;
-    
+
     request->url = GetUrlFromString(url);
     if (request->url == NULL) {
         return NULL;
@@ -605,6 +603,11 @@ HttpRequest* NewHttpRequest(const char* url, const char* method, const HttpPostD
         SetHttpHeader(request->header, "Content-Type", "application/x-www-form-urlencoded");
         request->data = (char*) calloc(MAX_POST_DATA_SIZE, sizeof(char));
         GetPostDataBuffer(data, request->data);
+    }
+
+    //  Bind with cookie
+    if (cookie != NULL) {
+        request->cookie = cookie;
     }
 
     return request;
@@ -639,6 +642,7 @@ void SetHttpPostData(HttpPostData* data, const char* key, const char* value)
 
 void SetHttpHeader(HttpHeader* header, const char* key, const char* value)
 {
+    // printf("%s %s\n", key, value);
     int needNew     = 0;
     int keyLen      = strlen(key);
     int valueLen    = strlen(value);
