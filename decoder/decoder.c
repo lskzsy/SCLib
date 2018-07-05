@@ -152,6 +152,10 @@ param_decode_int(
     const char* string,
     const void* variable)
 {
+    if (string == NULL) {
+        return;
+    }
+
     int* int_variable = (int*) variable;
     int minus = 1;
     int i = 0;
@@ -177,6 +181,10 @@ param_decode_float(
     const char* string,
     const void* variable)
 {
+    if (string == NULL) {
+        return;
+    }
+
     float* float_variable = (float*) variable;
     int minus = 1;
     int i = 0;
@@ -212,6 +220,10 @@ param_decode_string(
     const void* variable,
     size_t variable_size)
 {
+    if (string == NULL) {
+        return;
+    }
+
     char* string_variable = (char*) variable;
     strncpy(string_variable, string, variable_size);
 }
