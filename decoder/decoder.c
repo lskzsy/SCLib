@@ -51,7 +51,6 @@ param_register_info_set*    create_param_register_info_tree_node(char c);
 param_register_info*        get_param_register_info(const char* op);
 void                        set_param_register_info_tree_node(const char* op, param_register_info* info);
 void                        init_param(int argc, const char* argv[]);
-const char*                 get_next_param();
 
 /*
  *  Function

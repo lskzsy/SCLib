@@ -28,4 +28,6 @@ int param_decode(int argc, const char* argv[]);
 
 int param_complete(incomplete_callback callback, int count, ...);
 
+const char* get_next_param();
+
 #endif
